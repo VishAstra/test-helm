@@ -1,0 +1,6 @@
+apiVersion: v2
+name: clickhouse
+description: Helm chart for ClickHouse hot-cold configuration
+type: application
+version: 0.1.0
+appVersion: "latest"  # Replace with specific ClickHouse version if needed

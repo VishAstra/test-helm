@@ -1,0 +1,15 @@
+clickhouse:
+  image: clickhouse/clickhouse-server
+  tag: latest  # Replace with specific ClickHouse version if needed
+  hotStorage:
+    size: 5Gi
+    storageClass: "standard"  # Replace with your storage class
+  coldStorage:
+    size: 10Gi
+    storageClass: "standard"  # Replace with your storage class
+
+moveFactor: 0.2  # Move factor for hot-cold partitioning
+
+service:
+  type: ClusterIP
+  port: 8123

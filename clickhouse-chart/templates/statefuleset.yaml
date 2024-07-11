@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: clickhouse
+spec:
+  serviceName: "clickhouse"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clickhouse
+  template:
+    metadata:
+      labels:
+        app: clickhouse
+    spec:
+      containers:
+      - name: clickhouse-server
+        image: "{{ .Values.clickhouse.image }}:{{ .Values.clickhouse.tag }}"
+        ports:
+        - containerPort: 8123
+          name: clickhouse
+        volumeMounts:
+        - name: config
+          mountPath: /etc/clickhouse-server/
+        - name: hot-storage
+          mountPath: /var/lib/clickhouse/data/hot
+        - name: cold-storage
+          mountPath: /var/lib/clickhouse/data/cold
+      volumes:
+      - name: config
+        configMap:
+          name: clickhouse-config
+  volumeClaimTemplates:
+  - metadata:
+      name: hot-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "{{ .Values.clickhouse.hotStorage.storageClass }}"
+      resources:
+        requests:
+          storage: "{{ .Values.clickhouse.hotStorage.size }}"
+  - metadata:
+      name: cold-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "{{ .Values.clickhouse.coldStorage.storageClass }}"
+      resources:
+        requests:
+          storage: "{{ .Values.clickhouse.coldStorage.size }}" 

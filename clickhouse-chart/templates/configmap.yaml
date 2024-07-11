@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: clickhouse-config
+data:
+  config.xml: |
+    <yandex>
+        <storage_configuration>
+            <disks>
+                <hot>
+                    <path>/var/lib/clickhouse/data/hot/</path>
+                </hot>
+                <cold>
+                    <path>/var/lib/clickhouse/data/cold/</path>
+                </cold>
+            </disks>
+            <policies>
+                <default>
+                    <move_factor>{{ .Values.moveFactor }}</move_factor>
+                </default>
+            </policies>
+        </storage_configuration>
+        <logger>
+            <level>trace</level>
+        </logger>
+    </yandex>
